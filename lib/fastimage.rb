@@ -164,6 +164,7 @@ class FastImage
   def initialize(uri, options={})
     @property = options[:type_only] ? :type : :size
     @timeout = options[:timeout] || DefaultTimeout
+    @user_agent = options[:user_agent] || "FastImage"
     @proxy_url = options[:proxy]
     @uri = uri
 
@@ -215,7 +216,7 @@ class FastImage
 
   def fetch_using_http_from_parsed_uri
     setup_http
-    @http.request_get(@parsed_uri.request_uri, 'Accept-Encoding' => 'identity') do |res|
+    @http.request_get(@parsed_uri.request_uri, 'Accept-Encoding' => 'identity', 'User-Agent' => @user_agent) do |res|
       if res.is_a?(Net::HTTPRedirection) && @redirect_count < 4
         @redirect_count += 1
         begin
